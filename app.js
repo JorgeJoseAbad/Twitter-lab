@@ -1,4 +1,6 @@
 /* jshint esversion:6 */
+const session =require("express-session");
+const MongoStore = require("connect-mongo")(session);
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -8,10 +10,12 @@ var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const expressLayouts = require('express-ejs-layouts');
 
+mongoose.Promise=global.Promise;
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 const authController = require('./routes/authController');
+const tweetsController = require("./routes/tweetsController");
 
 var app = express();
 
@@ -32,8 +36,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+    secret: "basic-tweet-secret",
+    cookie: { maxAge: 60000 },
+    store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    ttl: 24 * 60 * 60 // 1 day
+
+  }),
+  resave: true,
+  saveUninitialized: true
+}));
+
+
 
 app.use("/", authController);
+app.use("/tweets", tweetsController);
 app.use('/', index);
 app.use('/users', users);
 

@@ -1,6 +1,8 @@
 /* jshint esversion:6 */
 const express        = require("express");
 const authController = express.Router();
+const mongoose = require('mongoose');
+mongoose.Promise=global.Promise;
 
 // User model
 const User           = require("../models/user");
@@ -8,6 +10,10 @@ const User           = require("../models/user");
 // Bcrypt to encrypt passwords
 const bcrypt         = require("bcrypt");
 const bcryptSalt     = 10;
+
+authController.get("/", (req, res) => {
+  res.redirect("/login");
+});
 
 
 authController.get("/signup", (req, res, next) => {
@@ -48,12 +54,61 @@ authController.post("/signup", (req, res, next) => {
           errorMessage: "Something went wrong when signing up"
         });
       } else {
+        res.redirect("/login");
         // User has been created...now what?
       }
     });
   });
 });
 
-module.exports = authController;
+authController.get("/login", (req, res, next) => {
+  res.render("auth/login");
+});
 
-module.exports=authController;
+authController.post("/login", (req, res, next) => {
+  var username = req.body.username;
+  var password = req.body.password;
+
+  if (username === "" || password === "") {
+    res.render("auth/login", {
+      errorMessage: "Indicate a username and a password to log in"
+    });
+    return;
+  }
+
+  User.findOne({ "username": username },
+    "_id username password following",
+    (err, user) => {
+      if (err || !user) {
+        res.render("auth/login", {
+          errorMessage: "The username doesn't exist"
+        });
+        return;
+      } else {
+        if (bcrypt.compareSync(password, user.password)) {
+          req.session.currentUser = user;
+          res.redirect("/tweets");
+          // logged in
+        } else {
+          res.render("auth/login", {
+            errorMessage: "Incorrect password"
+          });
+        }
+      }
+  });
+});
+
+authController.get("/logout", (req, res, next) => {
+  if (!req.session.currentUser) { res.redirect("/"); return; }
+
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("logout hecho??");
+      res.redirect("/login");
+    }
+  });
+});
+
+module.exports = authController;
