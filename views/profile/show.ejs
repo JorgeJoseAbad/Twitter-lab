@@ -1,0 +1,18 @@
+<div id="profile">
+  <h2>@<%= username %></h2>
+</div>
+
+<div id="container">
+  <% if (tweets.length > 0) { %>
+    <% tweets.forEach(function(tweet) { %>
+      <div class="tweet-container">
+        <p><%= tweet.tweet %></p>
+        <p class="date"><%= moment(tweet.created_at).format("LL, LTS") %></p>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <div class="tweet-container no-tweets">
+      <p>@<%= username %> hasn't tweeted yet.</p>
+    </div>
+  <% } %>
+</div>

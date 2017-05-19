@@ -16,6 +16,8 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 const authController = require('./routes/authController');
 const tweetsController = require("./routes/tweetsController");
+const timelineController = require("./routes/timelineController");
+const profileController  = require("./routes/profileController");
 
 var app = express();
 
@@ -42,7 +44,6 @@ app.use(session({
     store: new MongoStore({
     mongooseConnection: mongoose.connection,
     ttl: 24 * 60 * 60 // 1 day
-
   }),
   resave: true,
   saveUninitialized: true
@@ -52,6 +53,9 @@ app.use(session({
 
 app.use("/", authController);
 app.use("/tweets", tweetsController);
+app.use("/profile", profileController);
+app.use('/timeline', timelineController);
+
 app.use('/', index);
 app.use('/users', users);
 
