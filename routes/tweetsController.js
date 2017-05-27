@@ -28,16 +28,31 @@ tweetsController.get("/", (req, res, next) => {
     .exec((err, user) => {
       if (!user) { return; }
 
+      //addedd to follow users, im not sure of this...
       Tweet.find({ "user_name": user.username }, "tweet created_at")
         .sort({ created_at: -1 })
         .exec((err, tweets) => {
-          console.log("tweets");
+          console.log("twetts find nuevo");
+          res.render("profile/show", {
+            tweets,
+            moment,
+            username: user.username,
+            session: req.session.currentUser
+          });
+      });
+      // to this...
+console.log("estoy entre dos aguas");
+
+      /*Tweet.find({ "user_name": user.username }, "tweet created_at")
+        .sort({ created_at: -1 })
+        .exec((err, tweets) => {
+          console.log("tweets find original");
           res.render("tweets/index",
             {
               username: user.username,
               tweets,
               moment });
-        });
+        });*/
   });
 });
 

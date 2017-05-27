@@ -1,6 +1,16 @@
 <div id="profile">
-  <h2>@<%= username %></h2>
+  <h2>@<%= username %> is is show.ejs</h2>
 </div>
+
+<% if (session !== undefined && username !== session.username) { %>
+  <form action="/profile/<%= username %>/follow" method="POST">
+    <button class="button blue"><%= button_text %></%%></button>
+  </form>
+<% }
+    else {%>
+      <a href="/tweets/new">New tweet</a>
+       <a href="/logout">Logout</a>
+  <%  }%>
 
 <div id="container">
   <% if (tweets.length > 0) { %>
