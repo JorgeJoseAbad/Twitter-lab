@@ -4,14 +4,17 @@
   <% if (timeline.length > 0) { %>
     <% timeline.forEach(function(tweet) { %>
       <div class="tweet-container">
+        <span>
+          <a href="/profile/<%= tweet.user_name %>">
+            @<%= tweet.user_name %>
+          </a>
+        </span><br>
         <p><%= tweet.tweet %></p>
         <p class="date">
-          <span>
-            <a href="/profile/<%= tweet.user_name %>">
-              @<%= tweet.user_name %>
-            </a>
-          </span><br>
-          <%= moment(tweet.created_at).format("LL, LTS") %>
+
+          Created: <%= moment(tweet.created_at).format("LL, LTS") %>
+          <br>
+          updated: <%= moment(tweet.updated_at).format('LLL')%>
         </p>
       </div>
     <% }) %>

@@ -27,6 +27,7 @@ profileController.get("/:username/timeline", (req, res) => {
 
 
 profileController.get("/:username", (req, res, next) => {
+  console.log("estoy en get username");
   User
     .findOne({ username: req.params.username }, "_id username")
     .exec((err, user) => {
@@ -40,7 +41,10 @@ profileController.get("/:username", (req, res, next) => {
       Tweet.find({ "user_name": user.username }, "tweet created_at")
         .sort({ created_at: -1 })
         .exec((err, tweets) => {
-          console.log("estoy en get username");
+          if (req.session.currenUser){ //if there is a loged user
+            console.log("req.session.currenUser.username: "+req.session.currentUser.username);
+          }         
+          console.log("req.params.username: "+req.params.username);
           res.render("profile/show", {
             username: user.username,
             session: req.session.currentUser, //added here this to follow users
@@ -49,6 +53,7 @@ profileController.get("/:username", (req, res, next) => {
             tweets,
             moment
           });
+
       });
   });
 });
