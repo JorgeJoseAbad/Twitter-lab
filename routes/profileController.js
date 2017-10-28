@@ -14,7 +14,8 @@ profileController.get("/:username/timeline", (req, res) => {
   console.log("currentUser:  "+currentUser.username);
   currentUser.following.push(currentUser._id);
 
-  Tweet.find({ user_id: { $in: currentUser.following } })
+  Tweet
+    .find({ user_id: { $in: currentUser.following } })
     .sort({ created_at: -1 })
     .exec((err, timeline) => {
       res.render("profile/timeline", {
@@ -35,15 +36,23 @@ profileController.get("/:username", (req, res, next) => {
 
       //added to follow users under this
       if (req.session.currentUser) {
+        console.log("to follow users: "+req.session.currentUser.following);
         isFollowing = req.session.currentUser.following.indexOf(user._id.toString()) > -1;
       }
 
-      Tweet.find({ "user_name": user.username }, "tweet created_at")
+      Tweet
+        .find({ "user_name": user.username }, "tweet created_at")
         .sort({ created_at: -1 })
         .exec((err, tweets) => {
-          if (req.session.currenUser){ //if there is a loged user
-            console.log("req.session.currenUser.username: "+req.session.currentUser.username);
-          }         
+           //if there is a loged (current) user
+           console.log(req.session.currentUser);
+           if (req.session.currentUser) {console.log("Logged user is: "+req.session.currentUser.username);
+              console.log("req.session.currenUser.username: "+req.session.currentUser.username);
+            } else {
+              console.log("redirijo");
+              res.redirect("/");
+              return;
+            }
           console.log("req.params.username: "+req.params.username);
           res.render("profile/show", {
             username: user.username,
@@ -53,7 +62,6 @@ profileController.get("/:username", (req, res, next) => {
             tweets,
             moment
           });
-
       });
   });
 });
@@ -64,7 +72,9 @@ profileController.use((req, res, next) => {
 });
 
 profileController.post("/:username/follow", (req, res) => {
-  User.findOne({ "username": req.params.username }, "_id").exec((err, follow) => {
+  User
+  .findOne({ "username": req.params.username }, "_id")
+  .exec((err, follow) => {
     if (err) {
       res.redirect("/profile/" + req.params.username);
       return;

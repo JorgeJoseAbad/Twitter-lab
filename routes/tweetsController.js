@@ -10,17 +10,11 @@ const moment = require("moment");
 
 //protecting the route, to ensure that all actions must have an authenticated user
 tweetsController.use((req, res, next) => {
-  if (req.session.currentUser) { next(); }
-  else { res.redirect("/login"); }
-});
 
-//route reemplazada por la get siguiente
-/*tweetsController.get("/", (req, res, next) => {
-  res.render(
-    "tweets/index",
-    { username: req.session.currentUser.username}
-  );
-});*/
+  if (req.session.currentUser) { next(); }
+    else { res.redirect("/login"); }
+  });
+
 
 tweetsController.get("/", (req, res, next) => {
   User
@@ -29,10 +23,12 @@ tweetsController.get("/", (req, res, next) => {
       if (!user) { return; }
 
       //addedd to follow users, im not sure of this...
-      Tweet.find({ "user_name": user.username }, "tweet created_at")
+      Tweet
+        .find({ "user_name": user.username }, "tweet created_at")
         .sort({ created_at: -1 })
         .exec((err, tweets) => {
           console.log("twetts find nuevo");
+          console.log(tweets);
           res.render("profile/show", {
             tweets,
             moment,
@@ -43,16 +39,7 @@ tweetsController.get("/", (req, res, next) => {
       // to this...
 console.log("estoy entre dos aguas");
 
-      /*Tweet.find({ "user_name": user.username }, "tweet created_at")
-        .sort({ created_at: -1 })
-        .exec((err, tweets) => {
-          console.log("tweets find original");
-          res.render("tweets/index",
-            {
-              username: user.username,
-              tweets,
-              moment });
-        });*/
+
   });
 });
 
@@ -65,13 +52,14 @@ tweetsController.get("/new", (req, res, next) => {
 tweetsController.post("/", (req, res, next) => {
   const user  = req.session.currentUser;
 
-  User.findOne({ username: user.username }).exec((err, user) => {
-    if (err) { return; }
+  User
+    .findOne({ username: user.username }).exec((err, user) => {
+      if (err) { return; }
 
-    const newTweet = Tweet({
-      user_id:   user._id,
-      user_name: user.username,
-      tweet:     req.body.tweetText
+      const newTweet = Tweet({
+        user_id:   user._id,
+        user_name: user.username,
+        tweet:     req.body.tweetText
     });
 
     newTweet.save((err) => {

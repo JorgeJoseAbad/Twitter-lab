@@ -4,14 +4,14 @@
 
 <% if (session !== undefined && username !== session.username) { %>
   <form action="/profile/<%= username %>/follow" method="POST">
-    <button class="button blue"><%= button_text %></%%></button>
+    <button class="button-blue"><%= button_text %></%%></button>
   </form>
-  <a href=".././tweets/">index</a>
+  <a class="link" href=".././tweets/">index</a>
 <% }
     else {%>
-      <a href="/tweets/new">New tweet</a>
-       <a href="/logout">Logout</a>
-       <a href="/timeline">timeline</a>
+       <a class="link" href="/tweets/new">New tweet</a>
+       <a class="link" href="/logout">Logout</a>
+       <a class="link" href="/timeline">Global timeline</a>
   <%  }%>
 
 <div id="container">
@@ -19,7 +19,11 @@
     <% tweets.forEach(function(tweet) { %>
       <div class="tweet-container">
         <p><%= tweet.tweet %></p>
-        <p class="date"><%= moment(tweet.created_at).format("LL, LTS") %></p>
+        <p class="date">
+          Created: <%= moment(tweet.created_at).format("LL, LTS") %>
+          <br>
+          Updated: <%= moment(tweet.updated_at).format("LL, LTS") %>
+        </p>
       </div>
     <% }) %>
   <% } else { %>

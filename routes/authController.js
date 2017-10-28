@@ -1,7 +1,7 @@
 /* jshint esversion:6 */
 const express        = require("express");
 const authController = express.Router();
-const mongoose = require('mongoose');
+const mongoose       = require('mongoose');
 mongoose.Promise=global.Promise;
 
 // User model
@@ -54,7 +54,7 @@ authController.post("/signup", (req, res, next) => {
           errorMessage: "Something went wrong when signing up"
         });
       } else {
-        res.redirect("/login");
+        res.redirect("/login"); //ojo a esto
         // User has been created...now what?
       }
     });

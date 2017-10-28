@@ -1,2 +1,3 @@
 # Twitter-lab
-A Twitter basic clone, for exercise.
+A Twitter basic clone.
+Exercise with node/express, mongoose.

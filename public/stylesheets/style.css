@@ -8,6 +8,25 @@ a {
 }
 
 .tweet-container{
+  margin-top: 5px;
   background-color: Cornsilk ;
   border-top: 2px solid blue;
+}
+
+.date{
+  font-family: fantasy;
+  font-size: 14px;
+}
+
+.button-blue{
+  background-color: #7a69f9;
+  margin-bottom: 5px;
+}
+
+.link{
+  background-color: #e6dada;
+  margin-right: 5px;
+  margin-top: 5px;
+  padding: 2px;
+  border: 1px solid #795353;
 }
