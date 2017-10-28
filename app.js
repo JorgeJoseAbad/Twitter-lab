@@ -1,4 +1,5 @@
 /* jshint esversion:6 */
+require("dotenv").config();
 const session =require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const express = require('express');
@@ -21,7 +22,7 @@ const profileController  = require("./routes/profileController");
 
 const app = express();
 
-mongoose.connect('mongodb://localhost/twitter-lab-development');
+mongoose.connect(process.env.MONGODB_URI);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
